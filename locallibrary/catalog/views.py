@@ -39,6 +39,19 @@ def index(request):
 from django.views import generic
 class BookListView(generic.ListView):
     model = Book
+    paginate_by = 3  # Show 10 books per page
 
 class BookDetailView(generic.DetailView):
     model = Book
+
+class AuthorListView(generic.ListView):
+    model = Author
+    paginate_by = 3  # Show 10 authors per page
+class AuthorDetailView(generic.DetailView):
+    model = Author
+
+    def get_context_data(self, **kwargs):
+        """Add in the books of the author."""
+        context = super().get_context_data(**kwargs)
+        context['author_books'] = Book.objects.filter(author=self.object)
+        return context
